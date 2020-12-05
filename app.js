@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+var SpotifyWebApi = require('spotify-web-api-node');
 const express = require("express")
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -11,10 +11,11 @@ const SpotifyStrategy = require('passport-spotify').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 var request = require("request");
-
-
+var axios = require('axios');
+const { json } = require("body-parser");
 const app = express();
 
+var exports = module.exports = {}
 app.set("view engine", 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
@@ -47,7 +48,7 @@ const spotifySchema = new mongoose.Schema({
   googleId: String
 });
 
-spotifySchema.plugin(passportLocalMongoose);
+spotifySchema.plugin(passportLocalMongoose);  
 spotifySchema.plugin(findOrCreate);
 
 const User = new mongoose.model("User", spotifySchema)
@@ -89,9 +90,10 @@ app.get("/", function(req, res) {
 
 app.get('/auth/spotify',
   passport.authenticate('spotify', {
-    scope: ['user-read-email', 'user-read-private']
+    scope: ['user-read-email', 'user-read-private', 'playlist-modify-private', 'playlist-read-private']
   })
 );
+
 
 app.get(authCallbackPath,
   passport.authenticate('spotify', {
@@ -113,7 +115,7 @@ app.get("/succesful", function(req, res) {
 
 app.get("/success",function(req,res){
   res.render("success");
-})
+})  
 
 app.post("/register", function(req, res) {
 
@@ -132,6 +134,23 @@ app.post("/register", function(req, res) {
 
 });
 
+// create playlist
+app.get('/create', (req,res) => {
+  axios({
+        method: 'POST',
+        url: `https://api.spotify.com/v1/me/playlists`,
+        data: {
+            "name": 'created mofo',
+            "description": "Playlist generated ",
+            "public": true
+        },
+        headers: { 
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer BQAv16FdBoXpGZFB5cd9xIG4_0FaMTmZ47DJxy-2kMt9YtIWBMIN6KaYBFFWl_1JAluYQCNxVZlGG-rPlHqHH9EWAr6__zafBTgIGevy_vZ2QtbuUqfACwz3N4yRxBt8-g6U6a8MhBCQIntdFApLVlvXW47KKUYv8uJGhpM0vsuFfEqI3lZ_b10rpJU2zxnH3O6xtpH4nBp-oPJqQ5zPK9H8fFf4_Pv-jzGWn8sf6EbBiiJ-Dcbzm-MroC_tnid276Q',
+        }}).then(console.log(res=res.statusCode))
+  });
+  
 const Usere = new mongoose.model("Usere", spotifySchema)
 
 
@@ -166,7 +185,6 @@ app.get("/auth/google/secrets",
     res.redirect("/success");
   });
 
-
 app.post("/register", function(req, res) {
 
   Usere.register({
@@ -181,18 +199,7 @@ app.post("/register", function(req, res) {
       });
     }
   });
-
-  // //create playlist
-  // spotifyApi.createPlaylist('Youtube', { 'description': 'Youtube Liked Songs', 'public': false })
-  // .then(function(data) {
-  //   console.log('Created playlist!');
-  //   console.log(data.playlistId);
-  // }, function(err) {
-  //   console.log('Something went wrong!', err);
-  // });
-
 });
-
 
 app.listen(3000, function(req, res) {
   console.log("Server started succesfully")

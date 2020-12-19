@@ -225,6 +225,7 @@ app.get('/getSongs', async (req,res) => {
   } catch (err) {
     console.log('####################',err)
   }
+
   res.redirect("/register");
     // axios ({
     //   method: 'GET',

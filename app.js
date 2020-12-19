@@ -1,5 +1,4 @@
 require("dotenv").config();
-var SpotifyWebApi = require('spotify-web-api-node');
 const express = require("express")
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -10,7 +9,6 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const SpotifyStrategy = require('passport-spotify').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-var request = require("request");
 var axios = require('axios');
 const { json } = require("body-parser");
 const { get } = require("request");
@@ -213,8 +211,8 @@ app.get('/getSongs', async (req,res) => {
       params:{
         part : 'snippet', 
         maxResults : 50,
-        playlistId : 'RDCLAK5uy_l78ojmVPyGVEpLjCHi2EEN0QY9ToABVR0',
-        key: 'AIzaSyDE5Xjn3DDfgc-4-iOUWLiT_sfwVn8KKz4'
+        playlistId : 'playlist id',
+        key: 'your google key'
       },  
       headers: { 
         'Accept': 'application/json'
@@ -227,21 +225,7 @@ app.get('/getSongs', async (req,res) => {
   } catch (err) {
     console.log('####################',err)
   }
-    // axios ({
-    //   method: 'GET',
-    //   url:'https://www.googleapis.com/youtube/v3/playlistItems',
-    //   params:{
-    //     part : 'snippet', 
-    //     maxResults : 25,
-    //     playlistId : 'RDgwjEbpdaoTc',
-    //     key: 'AIzaSyDE5Xjn3DDfgc-4-iOUWLiT_sfwVn8KKz4'
-    //   },
-    //   headers: { 
-    //     'Accept': 'application/json'
-    //   }
-
-    // }).then((resp)=> console.log('%%%%%%%%%%%%%%%%%%%%',respta))
-    // .catch((error)=>console.log('$$$$$$$$$$$$$$$$$', error))
+res.redirect('/register');
 });
 
 

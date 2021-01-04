@@ -175,6 +175,8 @@ app.get("/auth/google",
   })
 );
 
+console.log(123)
+
 app.get("/auth/google/secrets",
   passport.authenticate("google", {
     failureRedirect: "/login"
@@ -225,23 +227,7 @@ app.get('/getSongs', async (req,res) => {
   } catch (err) {
     console.log('####################',err)
   }
-
   res.redirect("/register");
-    // axios ({
-    //   method: 'GET',
-    //   url:'https://www.googleapis.com/youtube/v3/playlistItems',
-    //   params:{
-    //     part : 'snippet', 
-    //     maxResults : 25,
-    //     playlistId : 'RDgwjEbpdaoTc',
-    //     key: 'AIzaSyDE5Xjn3DDfgc-4-iOUWLiT_sfwVn8KKz4'
-    //   },
-    //   headers: { 
-    //     'Accept': 'application/json'
-    //   }
-
-    // }).then((resp)=> console.log('%%%%%%%%%%%%%%%%%%%%',respta))
-    // .catch((error)=>console.log('$$$$$$$$$$$$$$$$$', error))
 });
 
 
